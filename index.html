@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Live Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #1a2744;
+            --white: #ffffff;
+            --off-white: #f8f9fc;
+            --border-width: 4px;
+            --shadow-offset: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--off-white);
+            color: var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Geometric background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 50px,
+                    rgba(26,39,68,0.04) 50px,
+                    rgba(26,39,68,0.04) 51px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 50px,
+                    rgba(26,39,68,0.04) 50px,
+                    rgba(26,39,68,0.04) 51px
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: var(--border-width) solid var(--black);
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--black);
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--black);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: var(--border-width) solid var(--black);
+        }
+
+        .live-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Page visibility */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title span {
+            display: block;
+        }
+
+        .hero-title .outline {
+            -webkit-text-stroke: 3px var(--black);
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            max-width: 600px;
+            line-height: 1.6;
+            border-left: var(--border-width) solid var(--black);
+            padding-left: 1.5rem;
+            margin-left: 0.5rem;
+        }
+
+        /* Topic Cards Grid */
+        .topic-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .topic-card {
+            background: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 2.5rem;
+            position: relative;
+            transition: transform 0.2s ease;
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--black);
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: calc(var(--shadow-offset) + 4px) calc(var(--shadow-offset) + 4px) 0 0 var(--black);
+        }
+
+        .topic-number {
+            font-family: 'Anton', sans-serif;
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.15;
+        }
+
+        .topic-title {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.75rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .topic-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .topic-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-top: 2px solid var(--black);
+            padding-top: 1rem;
+        }
+
+        .topic-cta::after {
+            content: '→';
+            font-size: 1.2rem;
+        }
+
+        /* Terminal Block */
+        .terminal-section {
+            margin-bottom: 4rem;
+        }
+
+        .terminal-block {
+            background: var(--black);
+            color: var(--white);
+            padding: 2rem;
+            border: var(--border-width) solid var(--black);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .terminal-block::before {
+            content: 'TERMINAL';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--white);
+            color: var(--black);
+            padding: 0.25rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .code-line {
+            display: block;
+        }
+
+        .code-prompt {
+            color: #888;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            margin-bottom: 4rem;
+            padding: 3rem;
+            background: var(--black);
+            color: var(--white);
+            border: var(--border-width) solid var(--black);
+            position: relative;
+        }
+
+        .quote-mark {
+            font-family: 'Anton', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            opacity: 0.2;
+            position: absolute;
+            top: 1rem;
+            left: 2rem;
+        }
+
+        .quote-text {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            border-top: var(--border-width) solid var(--black);
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--black);
+            transition: width 0.2s ease;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ========== DETAIL PAGES ========== */
+        .detail-header {
+            margin-bottom: 3rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--black);
+            color: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 0.75rem 1.5rem;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .detail-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .detail-subtitle {
+            font-size: 1.1rem;
+            max-width: 700px;
+            line-height: 1.7;
+            border-left: var(--border-width) solid var(--black);
+            padding-left: 1.5rem;
+        }
+
+        /* Content Sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-block {
+            background: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 2rem;
+        }
+
+        .content-block h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .content-block p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .content-block ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-block li {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+
+        .content-block li::before {
+            content: '▪';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Full Width Section */
+        .full-section {
+            background: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .full-section h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .full-section p {
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            max-width: 800px;
+        }
+
+        /* Code Example Block */
+        .code-example {
+            background: var(--black);
+            color: var(--white);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        /* Feature List */
+        .feature-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-tag {
+            background: var(--black);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Decorative Elements */
+        .decoration {
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .decoration-1 {
+            top: 10%;
+            right: 5%;
+            width: 100px;
+            height: 100px;
+            border: 4px solid rgba(26,39,68,0.15);
+            transform: rotate(45deg);
+        }
+
+        .decoration-2 {
+            bottom: 15%;
+            left: 3%;
+            width: 60px;
+            height: 60px;
+            background: rgba(26,39,68,0.08);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero-title {
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                border-left: none;
+                border-top: var(--border-width) solid var(--black);
+                padding-left: 0;
+                padding-top: 1.5rem;
+                margin-left: 0;
+                text-align: center;
+            }
+
+            .detail-subtitle {
+                border-left: none;
+                border-top: var(--border-width) solid var(--black);
+                padding-left: 0;
+                padding-top: 1rem;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+
+    <div class="container">
+        <header>
+            <a class="logo" onclick="showPage('landing')">Claude Code</a>
+            <div class="live-badge">
+                <div class="live-dot"></div>
+                Live Stream
+            </div>
+        </header>
+
+        <!-- ========== LANDING PAGE ========== -->
+        <div id="landing" class="page active">
+            <section class="hero animate-in">
+                <h1 class="hero-title">
+                    <span>Claude</span>
+                    <span class="outline">Code</span>
+                    <span>Live</span>
+                </h1>
+                <p class="hero-subtitle">
+                    An agentic coding tool that lives in your terminal. Today we're exploring the Agent SDK, Skills, and Building Apps with Claude Code.
+                </p>
+            </section>
+
+            <section class="topic-cards">
+                <div class="topic-card animate-in delay-1" onclick="showPage('agent-sdk')">
+                    <div class="topic-number">01</div>
+                    <h3 class="topic-title">Agent SDK</h3>
+                    <p class="topic-text">
+                        Build autonomous agents that can perceive, reason, and act. Learn how to create intelligent systems with Claude's powerful SDK.
+                    </p>
+                    <div class="topic-cta">Explore Topic</div>
+                </div>
+
+                <div class="topic-card animate-in delay-2" onclick="showPage('skills')">
+                    <div class="topic-number">02</div>
+                    <h3 class="topic-title">Skills</h3>
+                    <p class="topic-text">
+                        Extend Claude Code with custom capabilities. Discover slash commands, CLAUDE.md configurations, and reusable skill patterns.
+                    </p>
+                    <div class="topic-cta">Explore Topic</div>
+                </div>
+
+                <div class="topic-card animate-in delay-3" onclick="showPage('building-apps')">
+                    <div class="topic-number">03</div>
+                    <h3 class="topic-title">Building Apps</h3>
+                    <p class="topic-text">
+                        Go from idea to production with Claude Code. Master rapid prototyping, design systems, and full-stack development workflows.
+                    </p>
+                    <div class="topic-cta">Explore Topic</div>
+                </div>
+            </section>
+
+            <section class="terminal-section animate-in">
+                <div class="terminal-block">
+                    <span class="code-line"><span class="code-prompt">$</span> claude</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-prompt">╭─────────────────────────────────────────╮</span></span>
+                    <span class="code-line"><span class="code-prompt">│</span>  Welcome to Claude Code               <span class="code-prompt">│</span></span>
+                    <span class="code-line"><span class="code-prompt">│</span>  Your AI pair programmer              <span class="code-prompt">│</span></span>
+                    <span class="code-line"><span class="code-prompt">╰─────────────────────────────────────────╯</span></span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="code-prompt">></span> Let's explore Agent SDK, Skills, and Building Apps_</span>
+                </div>
+            </section>
+
+            <section class="quote-section animate-in">
+                <div class="quote-mark">"</div>
+                <p class="quote-text">
+                    The best way to learn is to watch, experiment, and build together.
+                </p>
+            </section>
+
+            <footer>
+                <div class="footer-text">© 2026 Claude Code Live Stream</div>
+                <nav class="footer-links">
+                    <a href="https://docs.anthropic.com/en/docs/claude-code">Docs</a>
+                    <a href="https://github.com/anthropics/claude-code">GitHub</a>
+                    <a href="https://anthropic.com">Anthropic</a>
+                </nav>
+            </footer>
+        </div>
+
+        <!-- ========== AGENT SDK PAGE ========== -->
+        <div id="agent-sdk" class="page">
+            <div class="detail-header">
+                <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+                <h1 class="detail-title">Agent SDK</h1>
+                <p class="detail-subtitle">
+                    The Agent SDK is Claude's framework for building autonomous agents that can perceive, reason, and act in their environments. Create intelligent systems that make decisions and execute complex workflows.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>What is the Agent SDK?</h3>
+                    <p>The Agent SDK enables developers to build autonomous agents powered by Claude. These agents can:</p>
+                    <ul>
+                        <li>Understand context and make intelligent decisions</li>
+                        <li>Execute multi-step workflows independently</li>
+                        <li>Integrate with external tools and APIs</li>
+                        <li>Adapt strategies based on real-time feedback</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Core Capabilities</h3>
+                    <ul>
+                        <li><strong>Autonomous Decision Making</strong> — Agents reason through problems without constant human intervention</li>
+                        <li><strong>Tool Integration</strong> — Connect external APIs, databases, and services</li>
+                        <li><strong>Multi-Step Workflows</strong> — Chain complex operations for sophisticated task execution</li>
+                        <li><strong>Real-Time Reasoning</strong> — Process information and adapt on the fly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="full-section">
+                <h3>Getting Started</h3>
+                <p>To begin building with the Agent SDK, you need a Claude subscription (Pro, Max, Teams, or Enterprise) or a Claude Console account. The SDK integrates directly with Claude Code's terminal-based environment.</p>
+                <div class="code-example">
+# Install the Agent SDK<br>
+npm install @anthropic-ai/sdk<br><br>
+# Initialize a new agent project<br>
+claude --init-agent my-agent<br><br>
+# Start the agent in development mode<br>
+cd my-agent && claude
+                </div>
+                <div class="feature-row">
+                    <span class="feature-tag">TypeScript Support</span>
+                    <span class="feature-tag">Python SDK</span>
+                    <span class="feature-tag">REST API</span>
+                    <span class="feature-tag">Streaming</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>Use Cases</h3>
+                    <ul>
+                        <li><strong>Automated Customer Service</strong> — Agents that handle support requests independently</li>
+                        <li><strong>Data Analysis</strong> — Systems that gather, process, and analyze information</li>
+                        <li><strong>Task Automation</strong> — Workflows that execute repetitive processes intelligently</li>
+                        <li><strong>Research & Exploration</strong> — Agents that investigate topics and synthesize findings</li>
+                        <li><strong>Code Generation</strong> — Build custom pipelines for domain-specific code</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li>Start with simple, well-defined tools before building complex agents</li>
+                        <li>Test agent behavior thoroughly in sandbox environments</li>
+                        <li>Document tool capabilities clearly for Claude's understanding</li>
+                        <li>Monitor agent performance and refine tool definitions</li>
+                        <li>Use structured outputs for reliable data extraction</li>
+                        <li>Implement proper error handling and fallbacks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+
+            <footer>
+                <div class="footer-text">© 2026 Claude Code Live Stream</div>
+                <nav class="footer-links">
+                    <a href="https://docs.anthropic.com/en/docs/claude-code">Docs</a>
+                    <a href="https://github.com/anthropics/claude-code">GitHub</a>
+                    <a href="https://anthropic.com">Anthropic</a>
+                </nav>
+            </footer>
+        </div>
+
+        <!-- ========== SKILLS PAGE ========== -->
+        <div id="skills" class="page">
+            <div class="detail-header">
+                <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+                <h1 class="detail-title">Skills</h1>
+                <p class="detail-subtitle">
+                    Skills are composable, reusable capabilities that extend Claude Code's functionality. Build modular components that can be combined to create powerful, domain-specific solutions.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>What Are Skills?</h3>
+                    <p>Skills represent specific capabilities or tools that Claude Code can leverage. They range from simple utility functions to complex integrations with external services.</p>
+                    <ul>
+                        <li><strong>Modular Design</strong> — Create independent, composable components</li>
+                        <li><strong>Reusability</strong> — Share skills across projects and teams</li>
+                        <li><strong>Extensibility</strong> — Build upon existing skills</li>
+                        <li><strong>Maintainability</strong> — Clear separation of concerns</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>CLAUDE.md Configuration</h3>
+                    <p>The CLAUDE.md file is your project's memory. It stores conventions, preferences, and custom instructions that Claude remembers across sessions.</p>
+                    <ul>
+                        <li>Define coding standards and style guides</li>
+                        <li>Specify preferred libraries and frameworks</li>
+                        <li>Document architectural patterns</li>
+                        <li>Set up custom slash commands</li>
+                        <li>Configure project-specific behaviors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="full-section">
+                <h3>Slash Commands</h3>
+                <p>Custom slash commands let you define reusable prompts and workflows that can be triggered with simple commands. They're stored in your CLAUDE.md file or in a .claude/ directory.</p>
+                <div class="code-example">
+# Example CLAUDE.md with custom commands<br><br>
+## /review<br>
+Review the current file for bugs, security issues, and performance problems.<br>
+Provide specific line numbers and suggested fixes.<br><br>
+## /test<br>
+Generate comprehensive unit tests for the selected code using Jest.<br>
+Include edge cases and error scenarios.<br><br>
+## /refactor<br>
+Refactor the selected code to improve readability and maintainability.<br>
+Follow the project's coding standards.
+                </div>
+                <div class="feature-row">
+                    <span class="feature-tag">Custom Commands</span>
+                    <span class="feature-tag">Project Memory</span>
+                    <span class="feature-tag">Team Sharing</span>
+                    <span class="feature-tag">Version Control</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>Built-in Skills</h3>
+                    <ul>
+                        <li><strong>Code Completion</strong> — Context-aware suggestions</li>
+                        <li><strong>Refactoring</strong> — Intelligent code restructuring</li>
+                        <li><strong>Multi-language Support</strong> — Works with all major languages</li>
+                        <li><strong>Git Operations</strong> — Version control integration</li>
+                        <li><strong>File Navigation</strong> — Smart project exploration</li>
+                        <li><strong>Browser Automation</strong> — Web testing and scraping</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Skill Composition</h3>
+                    <p>Combine multiple skills to create sophisticated workflows. The power lies in composing simple, focused capabilities into complex systems.</p>
+                    <ul>
+                        <li>Chain skills for multi-step processes</li>
+                        <li>Create pipelines with input/output transformations</li>
+                        <li>Build domain-specific toolchains</li>
+                        <li>Share skill libraries across projects</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+
+            <footer>
+                <div class="footer-text">© 2026 Claude Code Live Stream</div>
+                <nav class="footer-links">
+                    <a href="https://docs.anthropic.com/en/docs/claude-code">Docs</a>
+                    <a href="https://github.com/anthropics/claude-code">GitHub</a>
+                    <a href="https://anthropic.com">Anthropic</a>
+                </nav>
+            </footer>
+        </div>
+
+        <!-- ========== BUILDING APPS PAGE ========== -->
+        <div id="building-apps" class="page">
+            <div class="detail-header">
+                <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+                <h1 class="detail-title">Building Apps</h1>
+                <p class="detail-subtitle">
+                    Claude Code accelerates the entire application development lifecycle. From rapid prototyping to production deployment, turn your ideas into reality faster than ever.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>Rapid Prototyping</h3>
+                    <p>Claude Code can scaffold entire responsive applications from natural language descriptions. Generate well-structured code with:</p>
+                    <ul>
+                        <li>Mobile-first responsive design</li>
+                        <li>Semantic HTML5 structure</li>
+                        <li>Modern CSS with flexbox and grid</li>
+                        <li>JavaScript interactivity</li>
+                        <li>Built-in accessibility considerations</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Design System Approach</h3>
+                    <p>The recommended workflow for quality applications:</p>
+                    <ul>
+                        <li><strong>Gather Inspiration</strong> — Collect reference designs and mood boards</li>
+                        <li><strong>Define the System</strong> — Colors, typography, spacing, components</li>
+                        <li><strong>Document in CLAUDE.md</strong> — Claude maintains consistency</li>
+                        <li><strong>Build Incrementally</strong> — Section by section</li>
+                        <li><strong>Polish & Iterate</strong> — Refine based on feedback</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="full-section">
+                <h3>Development Workflow</h3>
+                <p>Start your project and let Claude Code handle the heavy lifting. The workflow is designed for speed without sacrificing quality.</p>
+                <div class="code-example">
+# Start a new project<br>
+mkdir my-app && cd my-app<br>
+claude<br><br>
+# Describe what you want to build<br>
+> Create a modern landing page for a SaaS product with a hero section,<br>
+> features grid, pricing table, and footer. Use a clean, minimal design<br>
+> with a blue accent color.<br><br>
+# Claude generates the complete application<br>
+# Review, provide feedback, iterate
+                </div>
+                <div class="feature-row">
+                    <span class="feature-tag">React</span>
+                    <span class="feature-tag">Vue</span>
+                    <span class="feature-tag">Next.js</span>
+                    <span class="feature-tag">Node.js</span>
+                    <span class="feature-tag">Python</span>
+                    <span class="feature-tag">TypeScript</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-block">
+                    <h3>Full-Stack Development</h3>
+                    <ul>
+                        <li><strong>Frontend</strong> — React, Vue, Svelte, vanilla JS</li>
+                        <li><strong>Backend</strong> — Node.js, Python, Go, Rust</li>
+                        <li><strong>Databases</strong> — SQL queries, schema design, migrations</li>
+                        <li><strong>APIs</strong> — REST, GraphQL, WebSocket integration</li>
+                        <li><strong>Deployment</strong> — CI/CD pipelines, cloud configuration</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li>Create design documentation before development</li>
+                        <li>Use semantic HTML for accessibility and SEO</li>
+                        <li>Implement mobile-first responsive patterns</li>
+                        <li>Keep code modular with clear comments</li>
+                        <li>Test across devices and browsers</li>
+                        <li>Review Claude's code before deployment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="full-section">
+                <h3>Supported Platforms</h3>
+                <p>Claude Code works across your entire development environment:</p>
+                <div class="feature-row">
+                    <span class="feature-tag">Terminal / CLI</span>
+                    <span class="feature-tag">VS Code</span>
+                    <span class="feature-tag">JetBrains IDEs</span>
+                    <span class="feature-tag">GitHub Actions</span>
+                    <span class="feature-tag">Slack</span>
+                    <span class="feature-tag">Web Browser</span>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="showPage('landing')">← Back to Home</button>
+
+            <footer>
+                <div class="footer-text">© 2026 Claude Code Live Stream</div>
+                <nav class="footer-links">
+                    <a href="https://docs.anthropic.com/en/docs/claude-code">Docs</a>
+                    <a href="https://github.com/anthropics/claude-code">GitHub</a>
+                    <a href="https://anthropic.com">Anthropic</a>
+                </nav>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

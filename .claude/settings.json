@@ -1,0 +1,18 @@
+{
+  "project": {
+    "name": "Claude Code Live Stream",
+    "description": "Landing page for Claude Code live stream with neobrutalist design"
+  },
+  "preferences": {
+    "codeStyle": {
+      "indentation": 4,
+      "quotes": "double",
+      "semicolons": true
+    },
+    "design": {
+      "primaryColor": "#1a2744",
+      "fontFamily": "JetBrains Mono",
+      "borderWidth": "4px"
+    }
+  }
+}

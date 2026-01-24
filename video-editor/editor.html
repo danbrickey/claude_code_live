@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remotion Video Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1421;
+            --bg-panel: #1a2744;
+            --bg-card: #243352;
+            --text-primary: #ffffff;
+            --text-secondary: #8892a6;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #2d3a52;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            grid-template-rows: 60px 1fr 200px;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Scenes Panel */
+        .scenes-panel {
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .scene-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .scene-item {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scene-item:hover {
+            border-color: var(--accent);
+        }
+
+        .scene-item.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .scene-type {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--bg-panel);
+        }
+
+        .scene-duration {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .scene-title {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .add-scene-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: transparent;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-scene-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 960px;
+            aspect-ratio: 16 / 9;
+            background: var(--bg-panel);
+            border: 3px solid var(--border);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .canvas-title {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .canvas-subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        /* Properties Panel */
+        .properties-panel {
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .property-group {
+            margin-bottom: 20px;
+        }
+
+        .property-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .property-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .property-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .property-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-picker {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .color-value {
+            flex: 1;
+        }
+
+        /* Timeline */
+        .timeline {
+            grid-column: 1 / -1;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .timeline-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .timeline-track {
+            height: 60px;
+            background: var(--bg-dark);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-scene {
+            position: absolute;
+            height: 100%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .timeline-scene:hover {
+            border-color: var(--accent);
+        }
+
+        .timeline-scene.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-playhead {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--danger);
+            z-index: 10;
+        }
+
+        .timeline-playhead::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 12px;
+            height: 12px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">▶</div>
+                Remotion Video Editor
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary">Preview</button>
+                <button class="btn btn-secondary">Export JSON</button>
+                <button class="btn btn-primary">Render Video</button>
+            </div>
+        </header>
+
+        <!-- Scenes Panel -->
+        <aside class="scenes-panel">
+            <h2 class="panel-title">Scenes</h2>
+            <div class="scene-list" id="sceneList">
+                <!-- Scenes rendered by JS -->
+            </div>
+            <button class="add-scene-btn" onclick="addScene()">+ Add Scene</button>
+        </aside>
+
+        <!-- Canvas Area -->
+        <main class="canvas-area">
+            <div class="canvas-container">
+                <div class="canvas-preview" id="canvasPreview">
+                    <!-- Preview rendered by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Properties Panel -->
+        <aside class="properties-panel">
+            <h2 class="panel-title">Properties</h2>
+            <div id="propertiesForm">
+                <!-- Properties rendered by JS -->
+            </div>
+        </aside>
+
+        <!-- Timeline -->
+        <section class="timeline">
+            <div class="timeline-controls">
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+                <span class="time-display" id="timeDisplay">0:00 / 0:10</span>
+            </div>
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-playhead" id="playhead" style="left: 0%"></div>
+                <!-- Timeline scenes rendered by JS -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Video project state
+        let project = {
+            fps: 30,
+            scenes: [
+                {
+                    id: "intro",
+                    type: "title",
+                    startFrame: 0,
+                    durationInFrames: 90,
+                    props: {
+                        title: "Welcome",
+                        subtitle: "Your Video Title Here",
+                        backgroundColor: "#1a2744",
+                        textColor: "#ffffff",
+                    },
+                },
+                {
+                    id: "content",
+                    type: "bullets",
+                    startFrame: 90,
+                    durationInFrames: 120,
+                    props: {
+                        title: "Key Points",
+                        bullets: ["First point", "Second point", "Third point"],
+                        backgroundColor: "#ffffff",
+                        textColor: "#1a2744",
+                    },
+                },
+                {
+                    id: "outro",
+                    type: "cta",
+                    startFrame: 210,
+                    durationInFrames: 90,
+                    props: {
+                        title: "Get Started",
+                        ctaText: "Learn More →",
+                        backgroundColor: "#1a2744",
+                        textColor: "#ffffff",
+                    },
+                },
+            ],
+        };
+
+        let selectedSceneId = "intro";
+        let isPlaying = false;
+        let currentFrame = 0;
+        let playInterval = null;
+
+        function getTotalFrames() {
+            if (project.scenes.length === 0) return 150;
+            const lastScene = project.scenes[project.scenes.length - 1];
+            return lastScene.startFrame + lastScene.durationInFrames;
+        }
+
+        function renderSceneList() {
+            const list = document.getElementById("sceneList");
+            list.innerHTML = project.scenes.map((scene, i) => `
+                <div class="scene-item ${scene.id === selectedSceneId ? 'active' : ''}" 
+                     onclick="selectScene('${scene.id}')">
+                    <div class="scene-header">
+                        <span class="scene-type">${scene.type}</span>
+                        <span class="scene-duration">${(scene.durationInFrames / project.fps).toFixed(1)}s</span>
+                    </div>
+                    <div class="scene-title">${scene.props.title || 'Scene ' + (i + 1)}</div>
+                </div>
+            `).join("");
+        }
+
+        function renderTimeline() {
+            const track = document.getElementById("timelineTrack");
+            const total = getTotalFrames();
+            
+            let html = `<div class="timeline-playhead" id="playhead" style="left: ${(currentFrame / total) * 100}%"></div>`;
+            
+            project.scenes.forEach(scene => {
+                const left = (scene.startFrame / total) * 100;
+                const width = (scene.durationInFrames / total) * 100;
+                html += `
+                    <div class="timeline-scene ${scene.id === selectedSceneId ? 'active' : ''}"
+                         style="left: ${left}%; width: ${width}%"
+                         onclick="selectScene('${scene.id}')">
+                        ${scene.props.title || scene.type}
+                    </div>
+                `;
+            });
+            
+            track.innerHTML = html;
+        }
+
+        function renderProperties() {
+            const form = document.getElementById("propertiesForm");
+            const scene = project.scenes.find(s => s.id === selectedSceneId);
+            
+            if (!scene) {
+                form.innerHTML = '<p style="color: var(--text-secondary)">Select a scene to edit</p>';
+                return;
+            }
+
+            let html = `
+                <div class="property-group">
+                    <label class="property-label">Scene Type</label>
+                    <select class="property-input" onchange="updateSceneType('${scene.id}', this.value)">
+                        <option value="title" ${scene.type === 'title' ? 'selected' : ''}>Title</option>
+                        <option value="bullets" ${scene.type === 'bullets' ? 'selected' : ''}>Bullets</option>
+                        <option value="cta" ${scene.type === 'cta' ? 'selected' : ''}>CTA</option>
+                    </select>
+                </div>
+                <div class="property-group">
+                    <label class="property-label">Duration (seconds)</label>
+                    <input type="number" class="property-input" 
+                           value="${scene.durationInFrames / project.fps}"
+                           onchange="updateDuration('${scene.id}', this.value)">
+                </div>
+                <div class="property-group">
+                    <label class="property-label">Title</label>
+                    <input type="text" class="property-input" 
+                           value="${scene.props.title || ''}"
+                           oninput="updateProp('${scene.id}', 'title', this.value)">
+                </div>
+            `;
+
+            if (scene.type === 'title' && scene.props.subtitle !== undefined) {
+                html += `
+                    <div class="property-group">
+                        <label class="property-label">Subtitle</label>
+                        <input type="text" class="property-input" 
+                               value="${scene.props.subtitle || ''}"
+                               oninput="updateProp('${scene.id}', 'subtitle', this.value)">
+                    </div>
+                `;
+            }
+
+            if (scene.type === 'bullets') {
+                html += `
+                    <div class="property-group">
+                        <label class="property-label">Bullets (one per line)</label>
+                        <textarea class="property-input property-textarea"
+                                  oninput="updateBullets('${scene.id}', this.value)">${(scene.props.bullets || []).join('\n')}</textarea>
+                    </div>
+                `;
+            }
+
+            if (scene.type === 'cta') {
+                html += `
+                    <div class="property-group">
+                        <label class="property-label">CTA Text</label>
+                        <input type="text" class="property-input" 
+                               value="${scene.props.ctaText || ''}"
+                               oninput="updateProp('${scene.id}', 'ctaText', this.value)">
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="property-group">
+                    <label class="property-label">Background Color</label>
+                    <div class="color-picker-group">
+                        <input type="color" class="color-picker" 
+                               value="${scene.props.backgroundColor}"
+                               onchange="updateProp('${scene.id}', 'backgroundColor', this.value)">
+                        <input type="text" class="property-input color-value" 
+                               value="${scene.props.backgroundColor}"
+                               oninput="updateProp('${scene.id}', 'backgroundColor', this.value)">
+                    </div>
+                </div>
+                <div class="property-group">
+                    <label class="property-label">Text Color</label>
+                    <div class="color-picker-group">
+                        <input type="color" class="color-picker" 
+                               value="${scene.props.textColor}"
+                               onchange="updateProp('${scene.id}', 'textColor', this.value)">
+                        <input type="text" class="property-input color-value" 
+                               value="${scene.props.textColor}"
+                               oninput="updateProp('${scene.id}', 'textColor', this.value)">
+                    </div>
+                </div>
+            `;
+
+            form.innerHTML = html;
+        }
+
+        function renderCanvas() {
+            const preview = document.getElementById("canvasPreview");
+            const scene = project.scenes.find(s => s.id === selectedSceneId);
+            
+            if (!scene) {
+                preview.innerHTML = '<p>No scene selected</p>';
+                return;
+            }
+
+            preview.style.backgroundColor = scene.props.backgroundColor;
+            preview.style.color = scene.props.textColor;
+
+            let html = '';
+            if (scene.type === 'title') {
+                html = `
+                    <div class="canvas-title">${scene.props.title}</div>
+                    ${scene.props.subtitle ? `<div class="canvas-subtitle">${scene.props.subtitle}</div>` : ''}
+                `;
+            } else if (scene.type === 'bullets') {
+                html = `
+                    <div class="canvas-title" style="font-size: 36px; margin-bottom: 20px;">${scene.props.title}</div>
+                    <ul style="list-style: none; font-size: 24px; text-align: left;">
+                        ${(scene.props.bullets || []).map(b => `<li style="margin: 10px 0;">▪ ${b}</li>`).join('')}
+                    </ul>
+                `;
+            } else if (scene.type === 'cta') {
+                html = `
+                    <div class="canvas-title" style="font-size: 42px;">${scene.props.title}</div>
+                    <div style="margin-top: 30px; padding: 15px 40px; background: ${scene.props.textColor}; color: ${scene.props.backgroundColor}; border-radius: 8px; font-size: 24px; font-weight: 600;">
+                        ${scene.props.ctaText}
+                    </div>
+                `;
+            }
+
+            preview.innerHTML = html;
+        }
+
+        function selectScene(id) {
+            selectedSceneId = id;
+            render();
+        }
+
+        function updateProp(sceneId, prop, value) {
+            const scene = project.scenes.find(s => s.id === sceneId);
+            if (scene) {
+                scene.props[prop] = value;
+                renderCanvas();
+            }
+        }
+
+        function updateBullets(sceneId, value) {
+            const scene = project.scenes.find(s => s.id === sceneId);
+            if (scene) {
+                scene.props.bullets = value.split('\n').filter(b => b.trim());
+                renderCanvas();
+            }
+        }
+
+        function updateDuration(sceneId, seconds) {
+            const scene = project.scenes.find(s => s.id === sceneId);
+            if (scene) {
+                scene.durationInFrames = Math.round(parseFloat(seconds) * project.fps);
+                recalculateStartFrames();
+                render();
+            }
+        }
+
+        function updateSceneType(sceneId, type) {
+            const scene = project.scenes.find(s => s.id === sceneId);
+            if (scene) {
+                scene.type = type;
+                // Add default props for new type
+                if (type === 'bullets' && !scene.props.bullets) {
+                    scene.props.bullets = ['Point 1', 'Point 2', 'Point 3'];
+                }
+                if (type === 'cta' && !scene.props.ctaText) {
+                    scene.props.ctaText = 'Click Here';
+                }
+                if (type === 'title' && !scene.props.subtitle) {
+                    scene.props.subtitle = '';
+                }
+                render();
+            }
+        }
+
+        function recalculateStartFrames() {
+            let currentStart = 0;
+            project.scenes.forEach(scene => {
+                scene.startFrame = currentStart;
+                currentStart += scene.durationInFrames;
+            });
+        }
+
+        function addScene() {
+            const lastScene = project.scenes[project.scenes.length - 1];
+            const newStart = lastScene ? lastScene.startFrame + lastScene.durationInFrames : 0;
+            
+            const newScene = {
+                id: 'scene_' + Date.now(),
+                type: 'title',
+                startFrame: newStart,
+                durationInFrames: 90,
+                props: {
+                    title: 'New Scene',
+                    subtitle: '',
+                    backgroundColor: '#1a2744',
+                    textColor: '#ffffff',
+                },
+            };
+            
+            project.scenes.push(newScene);
+            selectedSceneId = newScene.id;
+            render();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').textContent = isPlaying ? '⏸' : '▶';
+            
+            if (isPlaying) {
+                playInterval = setInterval(() => {
+                    currentFrame++;
+                    if (currentFrame >= getTotalFrames()) {
+                        currentFrame = 0;
+                    }
+                    updatePlayhead();
+                }, 1000 / project.fps);
+            } else {
+                clearInterval(playInterval);
+            }
+        }
+
+        function updatePlayhead() {
+            const total = getTotalFrames();
+            const playhead = document.getElementById('playhead');
+            playhead.style.left = `${(currentFrame / total) * 100}%`;
+            
+            const currentTime = (currentFrame / project.fps).toFixed(1);
+            const totalTime = (total / project.fps).toFixed(1);
+            document.getElementById('timeDisplay').textContent = `${currentTime}s / ${totalTime}s`;
+        }
+
+        function render() {
+            renderSceneList();
+            renderTimeline();
+            renderProperties();
+            renderCanvas();
+            updatePlayhead();
+        }
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
