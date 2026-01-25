@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remotion Video Editor</title>
+    <title>CodeReel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -37,8 +37,8 @@
 
         .app {
             display: grid;
-            grid-template-columns: 300px 1fr 320px;
-            grid-template-rows: 60px 1fr 200px;
+            grid-template-columns: 280px 1fr 360px;
+            grid-template-rows: 60px 1fr 180px;
             height: 100vh;
         }
 
@@ -70,6 +70,93 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Video Selector */
+        .video-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 30px;
+        }
+
+        .video-dropdown {
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .video-dropdown:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .new-video-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .new-video-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            margin-right: 20px;
+            font-size: 13px;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .breadcrumb-item.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb-dropdown {
+            padding: 4px 8px;
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 13px;
+            cursor: pointer;
         }
 
         .header-actions {
@@ -233,12 +320,16 @@
             margin-top: 10px;
         }
 
-        /* Properties Panel */
+        /* Properties Panel (legacy, now inside tabs) */
         .properties-panel {
             background: var(--bg-panel);
             border-left: 1px solid var(--border);
             padding: 20px;
             overflow-y: auto;
+        }
+        
+        .properties-content {
+            /* No extra padding, handled by panel-content */
         }
 
         .property-group {
@@ -288,6 +379,311 @@
 
         .color-value {
             flex: 1;
+        }
+
+        /* Right Panel with Tabs */
+        .right-panel {
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 12px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .panel-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .panel-tab.active {
+            color: var(--accent);
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .panel-content.hidden {
+            display: none;
+        }
+
+        /* Image References Panel */
+        .image-search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .image-search-input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .image-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .search-btn {
+            padding: 8px 12px;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .search-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .image-scope-selector {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .scope-btn {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .scope-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .image-thumb {
+            aspect-ratio: 16/10;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .image-thumb:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .image-thumb.selected {
+            border-color: var(--success);
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+        }
+
+        .image-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-thumb .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+
+        .image-thumb-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-size: 9px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .image-thumb:hover .image-thumb-overlay {
+            opacity: 1;
+        }
+
+        .image-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .image-preview-img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: contain;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .image-preview-title {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .image-preview-source {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .image-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .assign-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .assign-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .assign-btn.assigned {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .assigned-images {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .assigned-images-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .assigned-image-item {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+
+        .assigned-image-thumb {
+            width: 48px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: var(--bg-dark);
+        }
+
+        .assigned-image-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .assigned-image-scope {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .assigned-image-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .remove-assigned-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .remove-assigned-btn:hover {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-secondary);
         }
 
         /* Timeline */
@@ -384,12 +780,47 @@
         <header class="header">
             <div class="logo">
                 <div class="logo-icon">▶</div>
-                Remotion Video Editor
+                CodeReel
             </div>
+            
+            <!-- Video Project Selector -->
+            <div class="video-selector">
+                <select class="video-dropdown" id="videoSelector" onchange="switchVideo(this.value)">
+                    <option value="demo">Demo Project</option>
+                    <option value="amazon-q-explainer">Amazon Q Explainer</option>
+                    <option value="dbt-tutorial">dbt Tutorial</option>
+                </select>
+                <button class="new-video-btn" onclick="createNewVideo()">+ New</button>
+            </div>
+            
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb-nav" id="breadcrumbNav">
+                <div class="breadcrumb-item" onclick="navigateTo('video')">
+                    🎬 <select class="breadcrumb-dropdown" id="videoBreadcrumb" onchange="switchVideo(this.value)">
+                        <option value="demo">Demo Project</option>
+                        <option value="amazon-q-explainer">Amazon Q Explainer</option>
+                    </select>
+                </div>
+                <span class="breadcrumb-separator">›</span>
+                <div class="breadcrumb-item" onclick="navigateTo('act')">
+                    📂 <select class="breadcrumb-dropdown" id="actBreadcrumb" onchange="navigateToAct(this.value)">
+                        <option value="1">Act 1: Setup</option>
+                        <option value="2">Act 2: Demo</option>
+                        <option value="3">Act 3: Conclusion</option>
+                    </select>
+                </div>
+                <span class="breadcrumb-separator">›</span>
+                <div class="breadcrumb-item active">
+                    📍 <select class="breadcrumb-dropdown" id="sceneBreadcrumb" onchange="navigateToScene(this.value)">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </nav>
+            
             <div class="header-actions">
-                <button class="btn btn-secondary">Preview</button>
-                <button class="btn btn-secondary">Export JSON</button>
-                <button class="btn btn-primary">Render Video</button>
+                <button class="btn btn-secondary" onclick="openPreview()">Preview</button>
+                <button class="btn btn-secondary" onclick="exportProject()">Export JSON</button>
+                <button class="btn btn-primary" onclick="renderVideo()">Render Video</button>
             </div>
         </header>
 
@@ -411,11 +842,64 @@
             </div>
         </main>
 
-        <!-- Properties Panel -->
-        <aside class="properties-panel">
-            <h2 class="panel-title">Properties</h2>
-            <div id="propertiesForm">
-                <!-- Properties rendered by JS -->
+        <!-- Right Panel (Properties + Image References) -->
+        <aside class="right-panel">
+            <div class="panel-tabs">
+                <button class="panel-tab active" onclick="switchTab('properties')" id="tab-properties">Properties</button>
+                <button class="panel-tab" onclick="switchTab('images')" id="tab-images">🖼 Images</button>
+            </div>
+            
+            <!-- Properties Tab -->
+            <div class="panel-content" id="properties-panel">
+                <div id="propertiesForm">
+                    <!-- Properties rendered by JS -->
+                </div>
+            </div>
+            
+            <!-- Image References Tab -->
+            <div class="panel-content hidden" id="images-panel">
+                <div class="image-search-box">
+                    <input type="text" class="image-search-input" id="imageSearchInput" 
+                           placeholder="Search images..." onkeydown="if(event.key==='Enter')searchImages()">
+                    <button class="search-btn" onclick="searchImages()">🔍</button>
+                </div>
+                
+                <div class="image-scope-selector">
+                    <button class="scope-btn active" onclick="setImageScope('scene')" id="scope-scene">Scene</button>
+                    <button class="scope-btn" onclick="setImageScope('act')" id="scope-act">Act</button>
+                    <button class="scope-btn" onclick="setImageScope('video')" id="scope-video">Video</button>
+                </div>
+                
+                <div class="image-grid" id="imageGrid">
+                    <!-- Search results rendered here -->
+                    <div class="image-thumb"><div class="no-image">Search for images</div></div>
+                </div>
+                
+                <!-- Image Preview -->
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <img class="image-preview-img" id="previewImg" src="" alt="Preview">
+                    <div class="image-preview-title" id="previewTitle">Image Title</div>
+                    <div class="image-preview-source" id="previewSource">source.com</div>
+                    <div class="image-actions">
+                        <button class="assign-btn" onclick="assignImage('scene')">
+                            📍 Assign to Current Scene
+                        </button>
+                        <button class="assign-btn" onclick="assignImage('act')">
+                            📂 Assign to Act
+                        </button>
+                        <button class="assign-btn" onclick="assignImage('video')">
+                            🎬 Assign to Entire Video
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Assigned Images -->
+                <div class="assigned-images" id="assignedImages">
+                    <div class="assigned-images-title">Assigned References</div>
+                    <div id="assignedImagesList">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
             </div>
         </aside>
 
@@ -433,6 +917,444 @@
     </div>
 
     <script>
+        // Video Projects Database
+        const videoProjects = {
+            'demo': {
+                id: 'demo',
+                name: 'Demo Project',
+                fps: 30,
+                acts: [
+                    { number: 1, name: 'Setup', scenes: ['intro', 'content'] },
+                    { number: 2, name: 'Conclusion', scenes: ['outro'] }
+                ],
+                scenes: [
+                    {
+                        id: "intro",
+                        type: "title",
+                        startFrame: 0,
+                        durationInFrames: 90,
+                        props: {
+                            title: "Welcome",
+                            subtitle: "Your Video Title Here",
+                            backgroundColor: "#1a2744",
+                            textColor: "#ffffff",
+                        },
+                    },
+                    {
+                        id: "content",
+                        type: "bullets",
+                        startFrame: 90,
+                        durationInFrames: 120,
+                        props: {
+                            title: "Key Points",
+                            bullets: ["First point", "Second point", "Third point"],
+                            backgroundColor: "#ffffff",
+                            textColor: "#1a2744",
+                        },
+                    },
+                    {
+                        id: "outro",
+                        type: "cta",
+                        startFrame: 210,
+                        durationInFrames: 90,
+                        props: {
+                            title: "Get Started",
+                            ctaText: "Learn More →",
+                            backgroundColor: "#1a2744",
+                            textColor: "#ffffff",
+                        },
+                    },
+                ]
+            },
+            'amazon-q-explainer': {
+                id: 'amazon-q-explainer',
+                name: 'Amazon Q Explainer',
+                fps: 30,
+                acts: [
+                    { number: 1, name: 'Introduction', scenes: ['title-scene'] },
+                    { number: 2, name: 'Demonstration', scenes: ['vscode-overview', 'zoom-chat', 'attach-context', 'type-prompt'] },
+                    { number: 3, name: 'Results', scenes: ['agent-working', 'files-created', 'benefits', 'call-to-action'] }
+                ],
+                scenes: [
+                    { id: "title-scene", type: "title", startFrame: 0, durationInFrames: 90, props: { title: "AI-Powered Development", subtitle: "Amazon Q Developer in Action", backgroundColor: "#1a1a2e", textColor: "#ffffff" }},
+                    { id: "vscode-overview", type: "vscode", startFrame: 90, durationInFrames: 120, props: { title: "VS Code Overview", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "zoom-chat", type: "vscode", startFrame: 210, durationInFrames: 90, props: { title: "Amazon Q Chat", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "attach-context", type: "vscode", startFrame: 300, durationInFrames: 120, props: { title: "Attach Context", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "type-prompt", type: "vscode", startFrame: 420, durationInFrames: 180, props: { title: "Type Prompt", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "agent-working", type: "agent", startFrame: 600, durationInFrames: 150, props: { title: "Agent Working", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "files-created", type: "vscode", startFrame: 750, durationInFrames: 120, props: { title: "Files Created", backgroundColor: "#1e1e1e", textColor: "#ffffff" }},
+                    { id: "benefits", type: "bullets", startFrame: 870, durationInFrames: 120, props: { title: "Benefits", bullets: ["Faster development", "Consistent code style", "Domain knowledge"], backgroundColor: "#1a1a2e", textColor: "#ffffff" }},
+                    { id: "call-to-action", type: "cta", startFrame: 990, durationInFrames: 90, props: { title: "Get Started", ctaText: "Try Amazon Q Today →", backgroundColor: "#ff9900", textColor: "#1a1a2e" }},
+                ]
+            },
+            'dbt-tutorial': {
+                id: 'dbt-tutorial',
+                name: 'dbt Tutorial',
+                fps: 30,
+                acts: [
+                    { number: 1, name: 'What is dbt?', scenes: ['dbt-intro'] },
+                    { number: 2, name: 'Getting Started', scenes: ['dbt-setup', 'dbt-models'] },
+                ],
+                scenes: [
+                    { id: "dbt-intro", type: "title", startFrame: 0, durationInFrames: 90, props: { title: "dbt: Data Build Tool", subtitle: "Transform your data with SQL", backgroundColor: "#ff694a", textColor: "#ffffff" }},
+                    { id: "dbt-setup", type: "bullets", startFrame: 90, durationInFrames: 120, props: { title: "Setup Steps", bullets: ["Install dbt-core", "Configure profiles.yml", "Initialize project"], backgroundColor: "#ffffff", textColor: "#1a2744" }},
+                    { id: "dbt-models", type: "bullets", startFrame: 210, durationInFrames: 120, props: { title: "Creating Models", bullets: ["Staging models", "Intermediate models", "Marts"], backgroundColor: "#1a2744", textColor: "#ffffff" }},
+                ]
+            }
+        };
+
+        let currentVideoId = 'demo';
+        let currentActNumber = 1;
+
+        function switchVideo(videoId) {
+            currentVideoId = videoId;
+            const video = videoProjects[videoId];
+            if (!video) return;
+            
+            project = {
+                fps: video.fps,
+                scenes: [...video.scenes]
+            };
+            
+            // Update dropdowns
+            document.getElementById('videoSelector').value = videoId;
+            document.getElementById('videoBreadcrumb').value = videoId;
+            
+            // Set first act and scene
+            currentActNumber = video.acts[0]?.number || 1;
+            selectedSceneId = video.scenes[0]?.id || null;
+            
+            updateActDropdown();
+            updateSceneBreadcrumb();
+            render();
+        }
+
+        function updateActDropdown() {
+            const video = videoProjects[currentVideoId];
+            const actSelect = document.getElementById('actBreadcrumb');
+            actSelect.innerHTML = video.acts.map(act => 
+                `<option value="${act.number}" ${act.number === currentActNumber ? 'selected' : ''}>Act ${act.number}: ${act.name}</option>`
+            ).join('');
+        }
+
+        function updateSceneBreadcrumb() {
+            const video = videoProjects[currentVideoId];
+            const act = video.acts.find(a => a.number === currentActNumber);
+            const sceneSelect = document.getElementById('sceneBreadcrumb');
+            
+            const scenesInAct = act ? video.scenes.filter(s => act.scenes.includes(s.id)) : video.scenes;
+            
+            sceneSelect.innerHTML = scenesInAct.map(scene => 
+                `<option value="${scene.id}" ${scene.id === selectedSceneId ? 'selected' : ''}>${scene.props.title || scene.id}</option>`
+            ).join('');
+        }
+
+        function navigateToAct(actNumber) {
+            currentActNumber = parseInt(actNumber);
+            const video = videoProjects[currentVideoId];
+            const act = video.acts.find(a => a.number === currentActNumber);
+            
+            if (act && act.scenes.length > 0) {
+                selectedSceneId = act.scenes[0];
+            }
+            
+            updateSceneBreadcrumb();
+            render();
+        }
+
+        function navigateToScene(sceneId) {
+            selectedSceneId = sceneId;
+            
+            // Update current act based on scene
+            const video = videoProjects[currentVideoId];
+            for (const act of video.acts) {
+                if (act.scenes.includes(sceneId)) {
+                    currentActNumber = act.number;
+                    document.getElementById('actBreadcrumb').value = act.number;
+                    break;
+                }
+            }
+            
+            render();
+        }
+
+        function createNewVideo() {
+            const name = prompt('Enter video name:');
+            if (!name) return;
+            
+            const id = name.toLowerCase().replace(/\s+/g, '-');
+            videoProjects[id] = {
+                id: id,
+                name: name,
+                fps: 30,
+                acts: [{ number: 1, name: 'Act 1', scenes: ['scene-1'] }],
+                scenes: [
+                    { id: 'scene-1', type: 'title', startFrame: 0, durationInFrames: 90, props: { title: name, subtitle: '', backgroundColor: '#1a2744', textColor: '#ffffff' }}
+                ]
+            };
+            
+            // Add to dropdowns
+            const option = `<option value="${id}">${name}</option>`;
+            document.getElementById('videoSelector').innerHTML += option;
+            document.getElementById('videoBreadcrumb').innerHTML += option;
+            
+            switchVideo(id);
+        }
+
+        function navigateTo(level) {
+            // Highlight the clicked breadcrumb
+            console.log('Navigate to:', level);
+        }
+
+        function openPreview() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        function exportProject() {
+            const data = JSON.stringify({ video: videoProjects[currentVideoId], imageReferences }, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentVideoId}.json`;
+            a.click();
+        }
+
+        function renderVideo() {
+            alert('Rendering would start via: npx remotion render');
+        }
+
+        // Tab switching
+        let activeTab = 'properties';
+        
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`${tab}-panel`).classList.remove('hidden');
+        }
+
+        // Image reference state
+        let imageScope = 'scene';
+        let selectedImage = null;
+        let searchResults = [];
+        let imageReferences = {
+            video: [],  // Applies to entire video
+            acts: {},   // { actNumber: [images] }
+            scenes: {}  // { sceneId: [images] }
+        };
+
+        // Sample image data (simulating Google Image search results)
+        const sampleImages = {
+            'vs code': [
+                { url: 'https://code.visualstudio.com/assets/updates/1_37/icons.gif', title: 'VS Code Dark Theme', source: 'code.visualstudio.com' },
+                { url: 'https://code.visualstudio.com/assets/docs/editor/intellisense/intellisense.gif', title: 'VS Code IntelliSense', source: 'code.visualstudio.com' },
+                { url: 'https://code.visualstudio.com/assets/docs/getstarted/tips-and-tricks/open_editors.gif', title: 'VS Code Editor', source: 'code.visualstudio.com' },
+                { url: 'https://code.visualstudio.com/assets/docs/editor/extension-marketplace/extensions-popular.png', title: 'Extensions', source: 'code.visualstudio.com' },
+            ],
+            'amazon q': [
+                { url: 'https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2024/04/30/amazon-q-developer.png', title: 'Amazon Q Developer', source: 'aws.amazon.com' },
+                { url: 'https://d2908q01vomqb2.cloudfront.net/7719a1c782a1ba91c031a682a0a2f8658209adbf/2024/11/22/feat.png', title: 'Amazon Q Chat', source: 'aws.amazon.com' },
+            ],
+            'data vault': [
+                { url: 'https://www.databricks.com/sites/default/files/2023-08/data-vault-model.png', title: 'Data Vault Model', source: 'databricks.com' },
+                { url: 'https://docs.getdbt.com/img/docs/dbt-cloud/semantic-layer/sl-architecture.jpg', title: 'dbt Architecture', source: 'getdbt.com' },
+            ],
+            'dbt': [
+                { url: 'https://docs.getdbt.com/img/docs/building-a-dbt-project/dbt-dag.png', title: 'dbt DAG', source: 'getdbt.com' },
+                { url: 'https://docs.getdbt.com/img/docs/collaborate/dbt-explorer/example-lineage-full.png', title: 'dbt Lineage', source: 'getdbt.com' },
+            ],
+            'healthcare': [
+                { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Healthcare_Interoperability.svg/1200px-Healthcare_Interoperability.svg.png', title: 'Healthcare Interoperability', source: 'wikipedia.org' },
+            ],
+            'default': [
+                { url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', title: 'Code Editor', source: 'unsplash.com' },
+                { url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', title: 'Developer Setup', source: 'unsplash.com' },
+                { url: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400', title: 'Programming', source: 'unsplash.com' },
+                { url: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400', title: 'Code on Screen', source: 'unsplash.com' },
+            ]
+        };
+
+        function setImageScope(scope) {
+            imageScope = scope;
+            document.querySelectorAll('.scope-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`scope-${scope}`).classList.add('active');
+        }
+
+        function searchImages() {
+            const query = document.getElementById('imageSearchInput').value.toLowerCase();
+            const grid = document.getElementById('imageGrid');
+            
+            // Show loading
+            grid.innerHTML = '<div class="loading-spinner">Searching...</div>';
+            
+            // Simulate search delay
+            setTimeout(() => {
+                // Find matching images
+                searchResults = [];
+                for (const [key, images] of Object.entries(sampleImages)) {
+                    if (query.includes(key) || key.includes(query)) {
+                        searchResults.push(...images);
+                    }
+                }
+                if (searchResults.length === 0) {
+                    searchResults = sampleImages.default;
+                }
+                
+                renderImageGrid();
+            }, 500);
+        }
+
+        function autoSearchForScene() {
+            const scene = project.scenes.find(s => s.id === selectedSceneId);
+            if (scene && scene.props.title) {
+                document.getElementById('imageSearchInput').value = scene.props.title;
+                searchImages();
+            }
+        }
+
+        function renderImageGrid() {
+            const grid = document.getElementById('imageGrid');
+            
+            if (searchResults.length === 0) {
+                grid.innerHTML = '<div class="image-thumb"><div class="no-image">No results</div></div>';
+                return;
+            }
+            
+            grid.innerHTML = searchResults.map((img, i) => `
+                <div class="image-thumb ${selectedImage === i ? 'selected' : ''}" 
+                     onclick="selectImage(${i})">
+                    <img src="${img.url}" alt="${img.title}" onerror="this.style.display='none'">
+                    <div class="image-thumb-overlay">${img.title}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectImage(index) {
+            selectedImage = index;
+            const img = searchResults[index];
+            
+            // Show preview
+            document.getElementById('imagePreview').style.display = 'block';
+            document.getElementById('previewImg').src = img.url;
+            document.getElementById('previewTitle').textContent = img.title;
+            document.getElementById('previewSource').textContent = img.source;
+            
+            renderImageGrid();
+        }
+
+        function assignImage(scope) {
+            if (selectedImage === null) return;
+            
+            const img = searchResults[selectedImage];
+            const scene = project.scenes.find(s => s.id === selectedSceneId);
+            const sceneIndex = project.scenes.findIndex(s => s.id === selectedSceneId);
+            const actNumber = Math.floor(sceneIndex / 3) + 1; // Roughly 3 scenes per act
+            
+            const reference = {
+                url: img.url,
+                title: img.title,
+                source: img.source,
+                assignedAt: new Date().toISOString()
+            };
+            
+            if (scope === 'video') {
+                imageReferences.video.push(reference);
+            } else if (scope === 'act') {
+                if (!imageReferences.acts[actNumber]) {
+                    imageReferences.acts[actNumber] = [];
+                }
+                imageReferences.acts[actNumber].push(reference);
+            } else if (scope === 'scene') {
+                if (!imageReferences.scenes[selectedSceneId]) {
+                    imageReferences.scenes[selectedSceneId] = [];
+                }
+                imageReferences.scenes[selectedSceneId].push(reference);
+            }
+            
+            renderAssignedImages();
+            
+            // Show feedback
+            const btn = event.target;
+            btn.classList.add('assigned');
+            btn.textContent = '✓ Assigned!';
+            setTimeout(() => {
+                btn.classList.remove('assigned');
+                if (scope === 'scene') btn.textContent = '📍 Assign to Current Scene';
+                else if (scope === 'act') btn.textContent = '📂 Assign to Act';
+                else btn.textContent = '🎬 Assign to Entire Video';
+            }, 1500);
+        }
+
+        function renderAssignedImages() {
+            const list = document.getElementById('assignedImagesList');
+            let html = '';
+            
+            // Video-level references
+            imageReferences.video.forEach((img, i) => {
+                html += `
+                    <div class="assigned-image-item">
+                        <img class="assigned-image-thumb" src="${img.url}" alt="" onerror="this.style.display='none'">
+                        <div class="assigned-image-info">
+                            <div class="assigned-image-scope">🎬 Video</div>
+                            <div class="assigned-image-name">${img.title}</div>
+                        </div>
+                        <button class="remove-assigned-btn" onclick="removeImageRef('video', ${i})">×</button>
+                    </div>
+                `;
+            });
+            
+            // Act-level references
+            for (const [actNum, images] of Object.entries(imageReferences.acts)) {
+                images.forEach((img, i) => {
+                    html += `
+                        <div class="assigned-image-item">
+                            <img class="assigned-image-thumb" src="${img.url}" alt="" onerror="this.style.display='none'">
+                            <div class="assigned-image-info">
+                                <div class="assigned-image-scope">📂 Act ${actNum}</div>
+                                <div class="assigned-image-name">${img.title}</div>
+                            </div>
+                            <button class="remove-assigned-btn" onclick="removeImageRef('act', ${i}, ${actNum})">×</button>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Scene-level references (only show current scene)
+            const sceneImages = imageReferences.scenes[selectedSceneId] || [];
+            sceneImages.forEach((img, i) => {
+                const scene = project.scenes.find(s => s.id === selectedSceneId);
+                html += `
+                    <div class="assigned-image-item">
+                        <img class="assigned-image-thumb" src="${img.url}" alt="" onerror="this.style.display='none'">
+                        <div class="assigned-image-info">
+                            <div class="assigned-image-scope">📍 ${scene?.props?.title || 'Scene'}</div>
+                            <div class="assigned-image-name">${img.title}</div>
+                        </div>
+                        <button class="remove-assigned-btn" onclick="removeImageRef('scene', ${i}, '${selectedSceneId}')">×</button>
+                    </div>
+                `;
+            });
+            
+            if (html === '') {
+                html = '<div style="color: var(--text-secondary); font-size: 12px; padding: 8px;">No images assigned yet</div>';
+            }
+            
+            list.innerHTML = html;
+        }
+
+        function removeImageRef(scope, index, key) {
+            if (scope === 'video') {
+                imageReferences.video.splice(index, 1);
+            } else if (scope === 'act') {
+                imageReferences.acts[key].splice(index, 1);
+            } else if (scope === 'scene') {
+                imageReferences.scenes[key].splice(index, 1);
+            }
+            renderAssignedImages();
+        }
+
         // Video project state
         let project = {
             fps: 30,
@@ -653,6 +1575,20 @@
 
         function selectScene(id) {
             selectedSceneId = id;
+            
+            // Update act based on selected scene
+            const video = videoProjects[currentVideoId];
+            if (video) {
+                for (const act of video.acts) {
+                    if (act.scenes.includes(id)) {
+                        currentActNumber = act.number;
+                        document.getElementById('actBreadcrumb').value = act.number;
+                        break;
+                    }
+                }
+            }
+            
+            updateSceneBreadcrumb();
             render();
         }
 
@@ -762,10 +1698,22 @@
             renderProperties();
             renderCanvas();
             updatePlayhead();
+            renderAssignedImages();
+        }
+
+        function exportImageReferences() {
+            return JSON.stringify(imageReferences, null, 2);
         }
 
         // Initial render
-        render();
+        switchVideo('demo'); // Initialize with demo project
+        
+        // Auto-suggest search based on scene when switching to images tab
+        document.getElementById('tab-images').addEventListener('click', () => {
+            if (searchResults.length === 0) {
+                autoSearchForScene();
+            }
+        });
     </script>
 </body>
 </html>

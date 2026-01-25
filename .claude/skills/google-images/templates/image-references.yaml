@@ -1,0 +1,38 @@
+# Image References Template
+# Use this to document reference images found for a video composition
+
+video_id: "{VideoName}"
+last_updated: "YYYY-MM-DD"
+
+style_references:
+  # Overall visual style inspiration
+  - url: ""
+    description: ""
+    used_for: "color palette | typography | layout | animation style"
+    
+ui_screenshots:
+  # Real product screenshots for accuracy
+  - url: ""
+    product: ""
+    description: ""
+    scene: ""  # Which scene uses this reference
+    
+diagrams:
+  # Technical diagrams and architecture visuals
+  - url: ""
+    type: "architecture | flow | data model | sequence"
+    description: ""
+    scene: ""
+
+stock_imagery:
+  # Theme-appropriate stock photos
+  - url: ""
+    description: ""
+    scene: ""
+
+search_history:
+  # Log of searches performed
+  - query: ""
+    date: ""
+    results_found: 0
+    useful_results: 0

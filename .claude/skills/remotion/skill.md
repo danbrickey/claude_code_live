@@ -1,6 +1,6 @@
-# Remotion Video Skill
+# CodeReel Video Skill
 
-Create and edit programmatic videos using Remotion - a React framework for making videos with code.
+Create and edit programmatic videos using CodeReel (powered by Remotion) - a React framework for making videos with code.
 
 ## Installation
 
@@ -12,11 +12,11 @@ npx skills add remotion-dev/remotion
 
 When this skill is active, Claude Code can:
 
-- Create new Remotion video projects
+- Create new CodeReel video projects
 - Generate animated video scenes as React components
 - Build compositions with proper timing and sequences
 - Render videos to MP4, WebM, or GIF formats
-- Preview videos in the Remotion Studio
+- Preview videos in CodeReel Studio or Remotion Studio
 
 ## Core Concepts
 

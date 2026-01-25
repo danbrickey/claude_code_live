@@ -1,0 +1,307 @@
+# Amazon Q Explainer Video - AI Context Document
+# Purpose: Complete context for AI agents working on this Remotion video project
+#
+# IMPORTANT: This file is part of a three-file sync:
+#   1. src/index.tsx - The actual Remotion code (source of truth for rendering)
+#   2. src/compositions/AmazonQExplainer.yaml - Structured data for AI context (this file)
+#   3. src/compositions/AmazonQExplainer.md - Human-readable narrative description
+# 
+# When modifying the video, ALL THREE FILES must be updated to stay in sync.
+
+metadata:
+  video_id: AmazonQExplainer
+  project_type: Remotion video composition
+  entry_file: src/index.tsx
+  duration_seconds: 42
+  duration_frames: 1260
+  frame_rate: 30
+  resolution: 1920x1080
+
+status:
+  current: functional
+  last_updated: "2026-01-24"
+  recent_changes:
+    - Added closeupMode to VSCodeScene for full-screen prompt views (Scenes 4 & 5)
+    - Created typing animation for prompt entry
+    - Added animated context file attachment badges
+    - Fixed zoom centering issues by switching from CSS transform to dedicated closeup layout
+
+audience:
+  role: Junior Data Engineers
+  organization: Healthcare Payer
+  goal: Learn to use Amazon Q Developer for dbt development
+
+video_summary: |
+  Demonstrates how to use Amazon Q in VS Code to generate dbt packages 
+  by attaching context files and writing a detailed prompt. Uses healthcare 
+  payer domain examples (claims, providers, members, groups) without exposing PHI.
+
+scenes:
+  # Act 1: Setting the Stage (0:00-0:12)
+  
+  - id: intro
+    name: Intro  # Spoken name for verbal reference
+    beat: "1.1"
+    type: title
+    start_frame: 0
+    duration_frames: 90
+    duration_seconds: 3
+    content:
+      title: "Building dbt Packages with AI"
+      subtitle: "Amazon Q Developer in VS Code"
+    style:
+      text_color: "#ff9900"
+      background_color: "#232f3e"
+    purpose: Establish the topic and Amazon Q branding
+
+  - id: vscode-overview
+    name: VS Code Overview  # Spoken name for verbal reference
+    beat: "1.2"
+    type: vscode
+    start_frame: 90
+    duration_frames: 120
+    duration_seconds: 4
+    content:
+      show_chat: true
+      show_explorer: true
+      folders:
+        - models
+        - raw_vault
+        - business_vault
+    purpose: Establish the working environment and project context
+
+  - id: zoom-to-chat
+    name: Zoom to Chat  # Spoken name for verbal reference
+    beat: "1.3"
+    type: vscode
+    start_frame: 210
+    duration_frames: 150
+    duration_seconds: 5
+    content:
+      show_chat: true
+      show_explorer: false
+      zoom_level: 1.3
+      zoom_target: chat
+      chat_message: "Hello! I'm Amazon Q Developer. I can help you generate code, explain existing code, or work on complex tasks across your codebase."
+    purpose: Introduce the Amazon Q chat interface
+
+  # Act 2: The Demonstration (0:12-0:24)
+  
+  - id: attach-context
+    name: Attach Context  # Spoken name for verbal reference
+    beat: "2.1"
+    type: vscode
+    start_frame: 360
+    duration_frames: 120
+    duration_seconds: 4
+    content:
+      closeup_mode: true
+      attached_files:
+        - name: architecture_spec.md
+          appear_frame: 30
+        - name: data_vault_patterns.md
+          appear_frame: 60
+        - name: dbt_coding_standards.md
+          appear_frame: 90
+    purpose: Show how to pin context documents for the AI to reference
+
+  - id: type-prompt
+    name: Type Prompt  # Spoken name for verbal reference
+    beat: "2.2"
+    type: vscode
+    start_frame: 480
+    duration_frames: 240
+    duration_seconds: 8
+    content:
+      closeup_mode: true
+      typing_start_frame: 30
+      typing_text: |
+        Using the attached architecture spec and context documents, create a 
+        complete set of dbt packages for our Data Vault implementation. Include 
+        raw vault hubs and links for claims, providers, members, and groups 
+        entities. Follow our coding standards and naming conventions.
+      attached_files:
+        - architecture_spec.md
+        - data_vault_patterns.md
+        - dbt_coding_standards.md
+    purpose: Demonstrate crafting a detailed, context-aware prompt
+
+  # Act 3: Results and Payoff (0:24-0:42)
+  
+  - id: agent-working
+    name: Agent Working  # Spoken name for verbal reference
+    beat: "3.1"
+    type: agent
+    start_frame: 720
+    duration_frames: 180
+    duration_seconds: 6
+    content:
+      task_description: "Creating Data Vault dbt packages for healthcare payer domain"
+      steps:
+        - text: "Analyzing architecture specification..."
+          status: done
+        - text: "Reading Data Vault patterns from context..."
+          status: done
+        - text: "Generating hub models for core entities..."
+          status: working
+        - text: "Creating link models for relationships..."
+          status: pending
+        - text: "Building staging models with coding standards..."
+          status: pending
+        - text: "Generating schema.yml documentation..."
+          status: pending
+      files_created:
+        - hub_claim.sql
+        - hub_provider.sql
+        - hub_member.sql
+        - hub_group.sql
+        - link_claim_provider.sql
+        - link_member_group.sql
+        - stg_claims.sql
+        - schema.yml
+    purpose: Show the AI agent actively working and creating files
+
+  - id: files-created
+    name: Files Created  # Spoken name for verbal reference
+    beat: "3.2"
+    type: vscode
+    start_frame: 900
+    duration_frames: 120
+    duration_seconds: 4
+    content:
+      show_chat: true
+      show_explorer: true
+      zoom_level: 1.2
+      zoom_target: explorer
+      new_files:
+        - hub_claim.sql
+        - hub_provider.sql
+        - hub_member.sql
+        - hub_group.sql
+        - link_claim_provider.sql
+        - schema.yml
+    purpose: Show the tangible output - real files created by the AI
+
+  - id: benefits
+    name: Benefits  # Spoken name for verbal reference
+    beat: "3.3"
+    type: bullets
+    start_frame: 1020
+    duration_frames: 120
+    duration_seconds: 4
+    content:
+      title: "Why Use Amazon Q for dbt?"
+      bullets:
+        - "⚡ Accelerate development with AI-generated boilerplate"
+        - "📋 Consistent code following your standards"
+        - "🏗️ Data Vault patterns applied automatically"
+        - "✅ Schema documentation generated"
+    purpose: Reinforce key benefits and value proposition
+
+  - id: cta
+    name: Call to Action  # Spoken name for verbal reference
+    beat: "3.4"
+    type: cta
+    start_frame: 1140
+    duration_frames: 120
+    duration_seconds: 4
+    content:
+      title: "Start Building with Amazon Q"
+      cta_text: "Try Amazon Q Developer Today"
+    style:
+      text_color: "#ff9900"
+      background_color: "#232f3e"
+    purpose: Drive action - get viewers to try the tool
+
+components:
+  VSCodeScene:
+    file: src/scenes/VSCodeScene.tsx
+    description: Mock VS Code interface with Amazon Q chat panel
+    props:
+      showChat: { type: boolean, default: true, description: "Show Amazon Q panel" }
+      showExplorer: { type: boolean, default: true, description: "Show file explorer" }
+      zoomLevel: { type: number, default: 1.0, description: "CSS transform zoom" }
+      zoomTarget: { type: string, options: [full, chat, explorer, prompt] }
+      closeupMode: { type: boolean, default: false, description: "Full-screen prompt view (hides VS Code chrome)" }
+      chatMessages: { type: array, description: "Array of {role, content} messages" }
+      typingText: { type: string, description: "Text to animate typing" }
+      typingStartFrame: { type: number, description: "Frame when typing begins" }
+      attachedFiles: { type: array, description: "Array of {name, appearFrame}" }
+      files: { type: array, description: "Array of {name, type, indent, appearFrame}" }
+
+  AgentWorkingScene:
+    file: src/scenes/AgentWorkingScene.tsx
+    description: Shows AI agent processing with animated progress
+    props:
+      taskDescription: { type: string }
+      steps: { type: array, description: "Array of {text, status}" }
+      filesCreated: { type: array, description: "Array of {name, type}" }
+
+domain_context:
+  industry: Healthcare Payer
+  entities:
+    claims: "Insurance claim records → hub_claim.sql"
+    providers: "Healthcare providers (doctors, facilities) → hub_provider.sql"
+    members: "Insurance plan members → hub_member.sql"
+    groups: "Employer groups/accounts → hub_group.sql"
+  architecture: Data Vault 2.0
+  patterns:
+    hubs: Core business entities
+    links: Relationships between entities
+    satellites: Descriptive attributes (not shown in video)
+
+design_decisions:
+  - decision: Use closeupMode instead of CSS zoom
+    reason: CSS transform zoom caused content to be cut off at edges
+    solution: Created closeupMode that renders a full-screen layout instead
+
+  - decision: Typing speed of 2 frames per character
+    reason: Balances readability with reasonable duration
+    result: Full prompt takes ~7 seconds
+
+  - decision: Stagger context file appearance by 1 second
+    reason: Shows deliberate attachment action
+
+  - decision: Show file names only, not SQL content
+    reason: Keep focus on workflow, not code details
+
+  - decision: Use AWS orange (#ff9900) for accents
+    reason: Official Amazon Q branding consistency
+
+pending_improvements:
+  - Add voiceover/narration track
+  - Include actual code snippets in agent working scene
+  - Add transition effects between scenes
+  - Create shorter 15-second social media cut
+  - Add captions/subtitles track
+
+file_structure:
+  - path: src/index.tsx
+    purpose: Main composition with scene definitions
+  - path: src/SceneComposition.tsx
+    purpose: Scene renderer/router
+  - path: src/types.ts
+    purpose: TypeScript interfaces
+  - path: src/compositions/AmazonQExplainer.yaml
+    purpose: This context document
+  - path: src/scenes/VSCodeScene.tsx
+    purpose: VS Code mock UI
+  - path: src/scenes/AgentWorkingScene.tsx
+    purpose: Agent progress view
+  - path: src/scenes/TitleScene.tsx
+    purpose: Title cards
+  - path: src/scenes/BulletsScene.tsx
+    purpose: Bullet point scenes
+  - path: src/scenes/CTAScene.tsx
+    purpose: Call to action
+
+session_continuity:
+  steps:
+    - Read this document to understand current state
+    - Run 'npm run dev' in video-editor folder
+    - Open http://localhost:3000 to preview
+    - Edit src/index.tsx to modify scenes
+    - Update this document when making changes
+  key_files:
+    - src/index.tsx
+    - src/compositions/AmazonQExplainer.yaml

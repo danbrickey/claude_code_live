@@ -1,0 +1,69 @@
+# Image References for Amazon Q Explainer Video
+# Found using Google Images skill
+
+video_id: AmazonQExplainer
+last_updated: "2026-01-24"
+
+style_references:
+  - search_query: "VS Code Amazon Q Developer extension screenshot"
+    description: "Multiple official AWS screenshots showing Amazon Q chat panel in VS Code dark theme"
+    used_for: "color palette, chat panel layout, activity bar styling"
+    sources:
+      - AWS Builder Center
+      - AWS official docs
+    notes: "The real UI uses purple/blue tones for the Q icon, orange accents for AWS branding"
+
+  - search_query: "VS Code dark theme dbt project"
+    description: "VS Code with dbt projects showing folder structure"
+    used_for: "file explorer layout, folder icons, project structure"
+    
+ui_elements_observed:
+  amazon_q_panel:
+    - Chat messages with robot icon
+    - Orange "Amazon Q" branding badge
+    - Code suggestions with syntax highlighting
+    - "Apply" and "Copy" buttons on suggestions
+    
+  vs_code_chrome:
+    - Dark theme (#1e1e1e background)
+    - Activity bar on left with extension icons
+    - Status bar at bottom (blue #007acc)
+    - Tab bar for open files
+
+recommended_searches:
+  for_vs_code_overview_scene:
+    - "VS Code Amazon Q Developer chat panel dark theme"
+    - "VS Code dbt project folder structure"
+    - "VS Code activity bar extensions"
+    
+  for_attach_context_scene:
+    - "VS Code context files pinned"
+    - "IDE attached documents AI assistant"
+    
+  for_agent_working_scene:
+    - "AI code generation progress indicator"
+    - "Amazon Q Developer code suggestions"
+    - "VS Code inline suggestions"
+    
+  for_files_created_scene:
+    - "VS Code file explorer new files"
+    - "dbt models folder structure sql yaml"
+
+diagrams:
+  - search_query: "Data Vault 2.0 hub link satellite diagram"
+    description: "Standard DV2 architecture diagrams"
+    used_for: "Could add as overlay in benefits scene"
+    
+  - search_query: "healthcare claims data model diagram"
+    description: "ER diagrams for claims/providers/members"
+    used_for: "Background context, domain accuracy"
+
+color_palette_extracted:
+  # Colors observed from Amazon Q screenshots
+  aws_orange: "#ff9900"
+  amazon_q_purple: "#7B68EE"  # Approximate
+  vs_code_dark: "#1e1e1e"
+  vs_code_sidebar: "#252526"
+  vs_code_statusbar: "#007acc"
+  text_primary: "#d4d4d4"
+  text_muted: "#6e6e6e"
