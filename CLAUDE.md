@@ -30,6 +30,28 @@ Custom skills are located in `.claude/skills/`. Available skills:
   - **In-Editor Panel**: Click 🖼 Images tab to browse and assign images
   - **CLI**: "Find reference images for [scene/video]"
 
+- **Docs Organizer** (`.claude/skills/docs-organizer/`) - Organize and index documentation
+  - Proactive front matter management (auto-adds to new docs)
+  - Documentation health checks and evaluation
+  - Master index at `docs/README.md`
+  - Document templates for planning, notes, specs
+  - **Tag suggestions**: AI-analyzes content and suggests relevant tags
+  - **Stale doc detection**: Flags docs >90 days old for review
+  - **Cross-reference suggestions**: Recommends links between related docs
+  - **TOC generation**: Auto-creates table of contents for docs >200 lines
+  - **Triggers**: "Run a doc health check", "Suggest tags", "Find stale docs", "Generate TOC"
+  - **Auto-applies**: Front matter, index updates, date fixes
+
+- **Planning Assistant** (`.claude/skills/planning-assistant/`) - Agile planning management
+  - Epic → Feature → Story hierarchy with bidirectional links
+  - Fibonacci sizing: 1, 2, 3, 5, 8, 13, 21 (21 = needs breakdown)
+  - Weekly Planning Increments (PIs) with goals and retrospectives
+  - SVG status dashboard with progress bars and Kanban summary
+  - Planning folder at `docs/planning/` with epics/, features/, stories/
+  - Integrates with docs-organizer for consistent front matter
+  - **Triggers**: "Create epic", "Break down [epic]", "Start PI planning", "Move [story] to done"
+  - **Auto-updates**: status.svg regenerated on planning changes
+
 ## Video Composition Workflow
 
 Each video composition maintains **three synchronized files**:

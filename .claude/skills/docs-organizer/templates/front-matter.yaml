@@ -1,0 +1,140 @@
+# Front Matter Schema for Documentation
+# This schema defines the standard front matter fields for all project documents.
+
+schema:
+  title:
+    type: string
+    required: true
+    description: Document title (inferred from H1 heading or filename if not provided)
+    default: null  # Auto-infer from content
+
+  created:
+    type: date
+    required: true
+    format: YYYY-MM-DD
+    description: Date document was created
+    default: null  # Use file creation date
+
+  updated:
+    type: date
+    required: true
+    format: YYYY-MM-DD
+    description: Date document was last modified
+    default: null  # Use file modification date
+
+  status:
+    type: enum
+    required: true
+    values:
+      - draft      # Work in progress, not ready for use
+      - active     # Current and maintained
+      - archived   # No longer maintained, kept for reference
+    default: active
+    description: Current lifecycle status of the document
+
+  type:
+    type: enum
+    required: true
+    values:
+      - planning   # Feature brainstorms, roadmaps, proposals
+      - notes      # Meeting notes, webinar notes, research notes
+      - spec       # Technical specifications, API documentation
+      - reference  # How-to guides, quick references
+      - guide      # Tutorials, walkthroughs, onboarding
+    default: null  # Infer from content/location
+    description: Category of document
+
+  author:
+    type: string
+    required: true
+    description: Author of the document (person or team name)
+    default: ""  # Should be filled in, but empty string if unknown
+
+  ai_model:
+    type: string
+    required: true
+    description: AI model used to generate or assist with the document
+    default: ~  # Use YAML null (~) when not AI-generated
+    note: |
+      Use ~ (YAML null) when the document is human-authored.
+      When AI-assisted, record the model name (e.g., "Claude Opus 4", "GPT-4").
+      The presence of a value (not ~) indicates AI involvement.
+
+  tags:
+    type: array
+    required: false
+    items: string
+    default: []
+    description: Searchable keywords for categorization
+
+  related:
+    type: array
+    required: false
+    items: string  # Relative paths to related documents
+    default: []
+    description: Links to related documents (relative paths from docs/)
+
+# Type inference rules
+type_inference:
+  by_location:
+    - pattern: "docs/planning/**"
+      type: planning
+    - pattern: "docs/specs/**"
+      type: spec
+    - pattern: "docs/guides/**"
+      type: guide
+    - pattern: ".claude/skills/**"
+      type: reference
+
+  by_filename:
+    - pattern: "*-notes.md"
+      type: notes
+    - pattern: "*-brainstorm.md"
+      type: planning
+    - pattern: "*-spec.md"
+      type: spec
+
+  by_content:
+    - contains: "## Meeting Attendees"
+      type: notes
+    - contains: "## API Endpoints"
+      type: spec
+    - contains: "## Feature Categories"
+      type: planning
+
+# Example front matter blocks
+examples:
+  human_authored: |
+    ---
+    title: Feature Brainstorm
+    created: 2026-01-15
+    updated: 2026-01-28
+    status: active
+    type: planning
+    author: Dan Brickey
+    ai_model: ~
+    tags: [features, roadmap, video-editor]
+    related: [webinar-notes.md]
+    ---
+
+  ai_assisted: |
+    ---
+    title: API Specification
+    created: 2026-01-28
+    updated: 2026-01-28
+    status: draft
+    type: spec
+    author: Dan Brickey
+    ai_model: Claude Opus 4
+    tags: [api, backend]
+    related: []
+    ---
+
+# Backfill behavior
+backfill:
+  description: |
+    When backfilling front matter to existing documents:
+    1. Always add author and ai_model fields
+    2. Use ~ for ai_model if generation source is unknown
+    3. Leave author empty ("") if unknown, prompting user to fill
+    4. Preserve any existing front matter fields

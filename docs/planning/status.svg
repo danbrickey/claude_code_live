@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
+  <style>
+    .title { font: bold 18px sans-serif; fill: #1a2744; }
+    .subtitle { font: 14px sans-serif; fill: #666; }
+    .message { font: 14px sans-serif; fill: #666; }
+    .hint { font: 12px sans-serif; fill: #999; font-style: italic; }
+  </style>
+  
+  <!-- Header -->
+  <text x="20" y="30" class="title">Planning Status</text>
+  <text x="20" y="50" class="subtitle">Updated: 2026-01-28</text>
+  
+  <!-- Empty State -->
+  <text x="20" y="90" class="message">No epics or features yet.</text>
+  <text x="20" y="115" class="message">Get started by creating your first epic:</text>
+  <text x="20" y="140" class="hint">"Create an epic for [your initiative]"</text>
+  
+  <!-- Footer -->
+  <text x="20" y="180" class="hint">Managed by Planning Assistant skill</text>
+</svg>

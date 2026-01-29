@@ -1,3 +1,15 @@
+---
+title: Claude Code Webinar Notes
+created: 2026-01-20
+updated: 2026-01-28
+status: active
+type: notes
+author: ""
+ai_model: ~
+tags: [webinar, claude-code, projects, beginner]
+related: [planning/feature-brainstorm.md]
+---
+
 # Claude Code Webinar Notes
 
 ## Three Types of Projects to Start With
