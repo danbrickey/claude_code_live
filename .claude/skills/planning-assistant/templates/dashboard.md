@@ -1,11 +1,11 @@
 ---
 title: Planning Dashboard
-created: 2026-01-28
-updated: 2026-01-28
+created: {created_date}
+updated: {updated_date}
 status: active
 type: planning
 author: ""
-ai_model: Claude Opus 4
+ai_model: Claude Sonnet 4.5
 tags: [planning, dashboard, index]
 related: []
 ---
@@ -29,20 +29,21 @@ related: []
 | [Stories](stories/) | Sized work items |
 | [Increments](increments/) | Weekly PI planning |
 | [Backlog](backlog.md) | Unprioritized ideas |
+| [Brainstorming](brainstorming.md) | Active PI planning discussions |
 
 ---
 
 ## Sprint Rhythm
 
-**Weekly Cadence:** Sunday → Saturday
+**Weekly Cadence:** {sprint_start_day} → {sprint_end_day}
 
 | Day | Activity |
 |-----|----------|
-| **Sunday AM** | Sprint Planning (plan the week ahead) |
-| **Sun-Fri** | Development work (primarily weekends + weeknights) |
-| **Saturday** | Sprint wrap-up (complete stories, prepare for planning) |
+| **{sprint_start_day} AM** | Sprint Planning (plan the week ahead) |
+| **{sprint_start_day}-{day_before_end}** | Development work{work_schedule_note} |
+| **{sprint_end_day}** | Sprint wrap-up (complete stories, prepare for planning) |
 
-**Planning Increments (PIs):** 1-week sprints aligned to weekend-focused development schedule.
+**Planning Increments (PIs):** {sprint_duration}-week sprints{sprint_note}.
 
 ---
 
@@ -67,7 +68,7 @@ related: []
 <!-- recent-activity-start -->
 | Date | Action | Item |
 |------|--------|------|
-| 2026-01-28 | Created | Planning Dashboard |
+| {created_date} | Created | Planning Dashboard |
 <!-- recent-activity-end -->
 
 ---
@@ -99,7 +100,8 @@ related: []
 ### Planning Documents
 
 <!-- planning-docs-start -->
-- [codeReel Feature Brainstorm](feature-brainstorm.md) - Feature categories and roadmap
+{brainstorming_link}
+{backlog_link}
 <!-- planning-docs-end -->
 
 ### Epics

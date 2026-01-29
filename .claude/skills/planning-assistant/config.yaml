@@ -1,0 +1,57 @@
+# Planning Assistant Configuration
+# Customize these paths for your project structure
+
+paths:
+  # Root directory for all planning documents
+  planning_root: docs/planning
+
+  # Subdirectories for planning artifacts
+  epics: docs/planning/epics
+  features: docs/planning/features
+  stories: docs/planning/stories
+  increments: docs/planning/increments
+
+  # Dashboard and tracking files
+  dashboard: docs/planning/README.md
+  status_svg: docs/planning/status.svg
+  backlog: docs/planning/backlog.md
+  brainstorming: docs/planning/brainstorming.md
+
+settings:
+  # Sprint configuration
+  sprint_duration: 1  # weeks
+  sprint_start_day: sunday
+  sprint_end_day: saturday
+
+  # Sizing limits
+  fibonacci_max: 21  # Story points over this need breakdown
+
+  # Auto-behaviors
+  auto_update_status: true  # Regenerate status.svg on planning changes
+  auto_link_bidirectional: true  # Update both parent and child docs
+
+  # PI naming format
+  pi_format: "pi-{year}-w{week}"  # e.g., pi-2026-w05
+
+# Workflow customization
+workflows:
+  # Prompt for these fields when creating epics
+  epic_interview_fields:
+    - business_value
+    - target_pi
+    - feature_ideas
+
+  # Prompt for these fields when creating features
+  feature_interview_fields:
+    - target_pi
+    - estimated_points
+
+  # Prompt for these fields when creating stories
+  story_interview_fields:
+    - points
+    - acceptance_criteria
+
+# Integration settings
+integrations:
+  docs_organizer: true  # Use docs-organizer for front matter
+  auto_index: true  # Add planning docs to master index

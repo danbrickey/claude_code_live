@@ -11,21 +11,39 @@ The status.svg file provides a visual summary of planning progress. It should be
 ```svg
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <defs>
+    <!-- Subtle shadow for depth -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
   <style>
-    .title { font: bold 18px sans-serif; fill: #1a2744; }
-    .subtitle { font: 14px sans-serif; fill: #666; }
-    .label { font: 12px sans-serif; fill: #333; }
-    .value { font: bold 12px sans-serif; fill: #1a2744; }
-    .bar-bg { fill: #e0e0e0; rx: 4; }
-    .bar-complete { fill: #4caf50; rx: 4; }
-    .bar-progress { fill: #2196f3; rx: 4; }
-    .bar-blocked { fill: #f44336; rx: 4; }
-    .kanban-todo { fill: #9e9e9e; }
-    .kanban-wip { fill: #2196f3; }
-    .kanban-done { fill: #4caf50; }
-    .kanban-blocked { fill: #f44336; }
+    /* Solid background with subtle border */
+    .background { fill: #ffffff; stroke: #d0d0d0; stroke-width: 1; }
+
+    /* High contrast text */
+    .title { font: bold 20px sans-serif; fill: #1a2744; }
+    .subtitle { font: 14px sans-serif; fill: #555555; }
+    .label { font: 12px sans-serif; fill: #2d2d2d; }
+    .value { font: bold 13px sans-serif; fill: #1a2744; }
+
+    /* Progress bars with better contrast */
+    .bar-bg { fill: #d8d8d8; stroke: #b0b0b0; stroke-width: 0.5; }
+    .bar-complete { fill: #34a853; }  /* Darker green */
+    .bar-progress { fill: #1976d2; }  /* Darker blue */
+    .bar-blocked { fill: #d32f2f; }   /* Darker red */
+
+    /* Kanban cards with better contrast and borders */
+    .kanban-todo { fill: #757575; stroke: #555555; stroke-width: 1; }
+    .kanban-wip { fill: #1976d2; stroke: #0d47a1; stroke-width: 1; }
+    .kanban-done { fill: #34a853; stroke: #1e8e3e; stroke-width: 1; }
+    .kanban-blocked { fill: #d32f2f; stroke: #b71c1c; stroke-width: 1; }
   </style>
-  
+
+  <!-- Solid white background with border -->
+  <rect width="600" height="400" class="background" rx="4"/>
+
   <!-- Content sections go here -->
 </svg>
 ```
@@ -175,12 +193,23 @@ Find the most recent `pi-YYYY-wWW` folder in `increments/` or calculate from cur
 
 ## Color Coding
 
-| Condition | Color | Class |
-|-----------|-------|-------|
-| Complete or on track | Green (#4caf50) | `bar-complete` |
-| In progress | Blue (#2196f3) | `bar-progress` |
-| Blocked | Red (#f44336) | `bar-blocked` |
-| Not started | Gray (#e0e0e0) | `bar-bg` |
+High contrast colors for better visibility:
+
+| Condition | Color | Hex Code | Class |
+|-----------|-------|----------|-------|
+| **Background** | White with border | #ffffff / #d0d0d0 | `background` |
+| Complete or on track | Darker green | #34a853 | `bar-complete` |
+| In progress | Darker blue | #1976d2 | `bar-progress` |
+| Blocked | Darker red | #d32f2f | `bar-blocked` |
+| Not started | Medium gray | #d8d8d8 | `bar-bg` |
+| **Text** | Navy / Dark gray | #1a2744 / #2d2d2d | `title` / `label` |
+
+**Contrast improvements:**
+- All text uses darker colors (#2d2d2d instead of #333, #555555 instead of #666)
+- Progress bar colors are darker for better visibility (#34a853 vs #4caf50)
+- Background bars have subtle borders (#b0b0b0 stroke)
+- Kanban cards have darker fills and borders for definition
+- White background ensures visibility in all contexts
 
 ## Regeneration Triggers
 
@@ -196,20 +225,30 @@ Regenerate status.svg when:
 ```svg
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
   <style>
-    .title { font: bold 18px sans-serif; fill: #1a2744; }
-    .subtitle { font: 14px sans-serif; fill: #666; }
-    .label { font: 12px sans-serif; fill: #333; }
-    .value { font: bold 12px sans-serif; fill: #1a2744; }
-    .bar-bg { fill: #e0e0e0; }
-    .bar-complete { fill: #4caf50; }
-    .bar-blocked { fill: #f44336; }
-    .kanban-todo { fill: #9e9e9e; }
-    .kanban-wip { fill: #2196f3; }
-    .kanban-done { fill: #4caf50; }
-    .kanban-blocked { fill: #f44336; }
+    .background { fill: #ffffff; stroke: #d0d0d0; stroke-width: 1; }
+    .title { font: bold 20px sans-serif; fill: #1a2744; }
+    .subtitle { font: 14px sans-serif; fill: #555555; }
+    .label { font: 12px sans-serif; fill: #2d2d2d; }
+    .value { font: bold 13px sans-serif; fill: #1a2744; }
+    .bar-bg { fill: #d8d8d8; stroke: #b0b0b0; stroke-width: 0.5; }
+    .bar-complete { fill: #34a853; }
+    .bar-blocked { fill: #d32f2f; }
+    .kanban-todo { fill: #757575; stroke: #555555; stroke-width: 1; }
+    .kanban-wip { fill: #1976d2; stroke: #0d47a1; stroke-width: 1; }
+    .kanban-done { fill: #34a853; stroke: #1e8e3e; stroke-width: 1; }
+    .kanban-blocked { fill: #d32f2f; stroke: #b71c1c; stroke-width: 1; }
   </style>
-  
+
+  <!-- Solid white background -->
+  <rect width="600" height="400" class="background" rx="4"/>
+
   <!-- Header -->
   <text x="20" y="30" class="title">Planning Status</text>
   <text x="20" y="48" class="subtitle">Updated: 2026-01-28 | Current PI: pi-2026-w05</text>
@@ -285,10 +324,14 @@ When no planning data exists:
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
   <style>
-    .title { font: bold 18px sans-serif; fill: #1a2744; }
-    .message { font: 14px sans-serif; fill: #666; }
+    .background { fill: #ffffff; stroke: #d0d0d0; stroke-width: 1; }
+    .title { font: bold 20px sans-serif; fill: #1a2744; }
+    .message { font: 14px sans-serif; fill: #555555; }
   </style>
-  
+
+  <!-- Solid white background -->
+  <rect width="600" height="200" class="background" rx="4"/>
+
   <text x="20" y="30" class="title">Planning Status</text>
   <text x="20" y="60" class="message">No epics or features yet.</text>
   <text x="20" y="85" class="message">Get started: "Create an epic for [your initiative]"</text>

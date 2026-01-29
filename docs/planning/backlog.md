@@ -7,7 +7,7 @@ type: planning
 author: ""
 ai_model: Claude Opus 4
 tags: [backlog, ideas, intake]
-related: [feature-brainstorm.md]
+related: [brainstorming.md, feature-brainstorm.md]
 ---
 
 # Planning Backlog
@@ -84,4 +84,5 @@ Ideas that were considered but rejected (kept for context):
 
 ## Related
 
+- [Planning Brainstorming](brainstorming.md) - Active PI planning discussions and rough-sizing
 - [Feature Brainstorm](feature-brainstorm.md) - Existing feature ideas for CodeReel

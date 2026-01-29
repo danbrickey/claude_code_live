@@ -9,6 +9,24 @@ dependencies:
   - docs-organizer  # For front matter and indexing
 ```
 
+## Configuration
+
+This skill is fully customizable via `config.yaml`. All paths and behaviors can be adjusted for your project.
+
+**Key settings:**
+- **Paths**: Customize where planning docs live (`docs/planning/` by default)
+- **Sprint cadence**: Configure sprint duration and start/end days
+- **Fibonacci limits**: Set max story points before breakdown required
+- **Auto-behaviors**: Toggle auto-updating status.svg, bidirectional linking
+
+**Portability:**
+1. Copy `.claude/skills/planning-assistant/` to new project
+2. Edit `config.yaml` to match new project's folder structure
+3. Run "setup planning system" to scaffold directories (or create manually)
+4. Start using the skill immediately
+
+See `config.yaml` for all available options and defaults.
+
 ## What This Skill Enables
 
 When this skill is active, Claude Code can:
@@ -151,8 +169,20 @@ This skill activates automatically when:
 - User mentions "status", "progress", "dashboard", "kanban"
 - User mentions "retro", "retrospective", "what worked"
 - User opens or edits files in `docs/planning/`
+- **Planning structure is missing** → Triggers initialization workflow
+- User mentions "setup planning", "initialize planning", "bootstrap"
 
 **See:** `rubrics/triggers.md` for detailed activation conditions.
+
+### Initialization Detection
+
+If the planning folder structure doesn't exist, this skill will:
+1. Detect missing structure proactively
+2. Offer to initialize the system with a guided interview
+3. Create folders, dashboard, and starter files
+4. Configure paths and sprint cadence in `config.yaml`
+
+**See:** `workflows/initialization.md` for the complete bootstrap workflow.
 
 ## Workflows
 

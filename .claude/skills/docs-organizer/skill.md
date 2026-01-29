@@ -2,6 +2,25 @@
 
 Proactively evaluates, indexes, and organizes project documentation. Auto-applies minor fixes while requesting approval for structural changes.
 
+## Configuration
+
+This skill is fully customizable via `config.yaml`. Paths, thresholds, and behaviors can be tailored to your project.
+
+**Key settings:**
+- **Paths**: Customize docs root and watch paths
+- **Staleness thresholds**: Configure when docs are flagged as stale (90/180/365 days)
+- **Auto-behaviors**: Toggle auto-adding front matter, suggesting tags, updating index
+- **Interview**: Configure which fields to ask about when creating docs
+- **Evaluation weights**: Adjust scoring criteria for document health
+- **Naming conventions**: File and config parameter naming style (snake_case by default)
+
+**Portability:**
+1. Copy `.claude/skills/docs-organizer/` to new project
+2. Edit `config.yaml` to match new project's documentation structure
+3. Start using the skill - it will adapt to your paths
+
+See `config.yaml` for all available options and defaults.
+
 ## What This Skill Enables
 
 When this skill is active, Claude Code can:
@@ -28,8 +47,21 @@ This skill activates automatically when:
 - A document is opened that has missing front matter
 - During commits that touch documentation files
 - User creates a new markdown file anywhere in the project
+- **Documentation structure is missing** → Triggers initialization workflow
+- User mentions "setup docs", "initialize documentation", "bootstrap docs"
 
 **See:** `rubrics/triggers.md` for detailed activation conditions.
+
+### Initialization Detection
+
+If the documentation folder or master index doesn't exist, this skill will:
+1. Detect missing structure proactively
+2. Offer to initialize the system with a guided interview
+3. Create docs folder and master index
+4. Add front matter to existing markdown files
+5. Configure paths and behaviors in `config.yaml`
+
+**See:** `workflows/initialization.md` for the complete bootstrap workflow.
 
 ## Core Concepts
 
@@ -67,12 +99,30 @@ related: [path/to/doc1.md, path/to/doc2.md]
 | `reference` | How-to guides, references | — |
 | `guide` | Tutorials, walkthroughs | — |
 
+### Naming Conventions
+
+**File naming:** This skill enforces **snake_case** naming by default for consistency.
+
+| Convention | Example | When Used |
+|------------|---------|-----------|
+| **snake_case** (default) | `meeting_notes.md`, `api_design_spec.md` | Files, config parameters |
+| kebab-case | `meeting-notes.md`, `api-design-spec.md` | Alternative (configurable) |
+| camelCase | `meetingNotes.md`, `apiDesignSpec.md` | Alternative (configurable) |
+| PascalCase | `MeetingNotes.md`, `ApiDesignSpec.md` | Alternative (configurable) |
+
+**Enforcement:**
+- When creating new documents, use snake_case filenames
+- Suggest renaming existing files that don't match convention
+- Configuration parameters always use snake_case (e.g., `docs_root`, `stale_threshold_days`)
+
+**Configure in `config.yaml`:** Set `naming.file_case` to your preferred convention.
+
 ### Change Classification
 
 | Change Type | Autonomy | Examples |
 |-------------|----------|----------|
-| **Minor** | Auto-apply | Add missing front matter, fix date formats, update "last modified", add to index, backfill author/ai_model fields |
-| **Major** | Ask first | Split document, move to different folder, create new folders, merge documents |
+| **Minor** | Auto-apply | Add missing front matter, fix date formats, update "last modified", add to index, backfill author/ai_model fields, suggest snake_case filenames |
+| **Major** | Ask first | Split document, move to different folder, create new folders, merge documents, rename files to match convention |
 
 ## How to Invoke
 

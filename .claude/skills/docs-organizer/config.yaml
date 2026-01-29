@@ -1,0 +1,138 @@
+# Documentation Organizer Configuration
+# Customize these paths and settings for your project
+
+paths:
+  # Root directory for documentation
+  docs_root: docs
+
+  # Master index file
+  master_index: docs/README.md
+
+  # Directories to watch for documentation
+  watch_paths:
+    - docs/
+    - compositions/
+    - .claude/skills/
+
+settings:
+  # Staleness detection
+  stale_threshold_days: 90  # Flag docs not updated in X days
+  stale_warning_days: 180   # Warn about likely outdated docs
+  stale_archive_days: 365   # Suggest archiving after 1 year
+
+  # Auto-behaviors
+  auto_add_front_matter: true  # Add missing front matter automatically
+  auto_suggest_tags: true  # Suggest tags for docs with empty tags
+  auto_update_index: true  # Update master index on doc changes
+
+  # Table of Contents
+  toc_min_lines: 200  # Suggest TOC for docs over this length
+  toc_min_sections: 5  # Or docs with this many H2 sections
+
+  # Document length warnings
+  warn_length_lines: 500  # Suggest splitting docs over this length
+  max_length_lines: 1000  # Flag docs exceeding this as too long
+
+# Front matter schema customization
+front_matter:
+  # Required fields (always present)
+  required:
+    - title
+    - created
+    - updated
+    - status
+    - type
+    - author
+    - ai_model
+    - tags
+    - related
+
+  # Default values for new documents
+  defaults:
+    status: draft
+    author: ""
+    ai_model: ~
+    tags: []
+    related: []
+
+  # Valid options for enum fields
+  valid_statuses:
+    - draft
+    - active
+    - archived
+
+  valid_types:
+    - planning
+    - notes
+    - spec
+    - reference
+    - guide
+    - epic      # Extended by planning-assistant
+    - feature   # Extended by planning-assistant
+    - story     # Extended by planning-assistant
+
+# Interview behavior
+interview:
+  # Ask these questions when creating new docs
+  ask_fields:
+    - author
+    - tags
+    - related
+
+  # Allow user to skip with these phrases
+  skip_phrases:
+    - skip
+    - no thanks
+    - use defaults
+    - later
+
+  # Batch questions for efficiency
+  batch_questions: true
+
+# Evaluation criteria weights
+evaluation:
+  front_matter_weight: 25
+  structure_weight: 20
+  cross_refs_weight: 15
+  length_weight: 15
+  indexed_weight: 15
+  freshness_weight: 10
+
+  # Minimum score to pass (out of 100)
+  passing_score: 70
+
+# Naming conventions
+naming:
+  # File naming convention preference
+  file_case: snake_case  # Options: snake_case, kebab-case, camelCase, PascalCase
+
+  # Examples of snake_case:
+  # - meeting_notes.md (not meeting-notes.md or meetingNotes.md)
+  # - api_design_spec.md (not api-design-spec.md)
+  # - feature_brainstorm.md (not feature-brainstorm.md)
+
+  # Configuration parameter naming
+  config_case: snake_case  # For YAML keys, variable names, etc.
+
+  # Enforce naming convention
+  enforce_file_naming: true  # Warn/suggest corrections if new files don't match
+  auto_suggest_rename: true  # Offer to rename files that don't match convention
+
+# Auto-fix behaviors
+auto_fix:
+  # Minor changes that can be applied automatically
+  allowed:
+    - add_missing_front_matter
+    - fix_date_formats
+    - update_last_modified
+    - add_to_index
+    - backfill_author_field
+    - backfill_ai_model_field
+
+  # Major changes that need approval
+  requires_approval:
+    - split_document
+    - move_to_different_folder
+    - create_new_folders
+    - merge_documents
+    - change_document_type
